@@ -2,7 +2,8 @@ import React from 'react'
 import { StyledButton } from './styles/Button.style';
 
 const Button = ({ color, text, onClick , disabled, cursor, hoverColor, font, W, H,
-        bgColor, size, bgDisabled, colorDisabled, tabletW, tabletH, laptopW, laptopH,
+        bgColor, size, bgDisabled, colorDisabled, tabletW, tabletH, laptopW, laptopH, margin,
+        tabletFont, laptopFont, 
     }) => {
 
     return (
@@ -10,7 +11,8 @@ const Button = ({ color, text, onClick , disabled, cursor, hoverColor, font, W, 
             onClick={onClick} hoverColor={hoverColor} font={font}
             bgColor={bgColor} size={size} bgDisabled={bgDisabled}
             colorDisabled={colorDisabled} tabletW={tabletW} tabletH={tabletH}
-            laptopW={laptopW} laptopH={laptopH}
+            laptopW={laptopW} laptopH={laptopH} margin={margin} tabletFont={tabletFont}
+            laptopFont={laptopFont}
         >
             {text}
         </StyledButton>

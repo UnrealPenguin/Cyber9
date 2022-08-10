@@ -12,6 +12,7 @@ const initialState = {
     errorMsg: "",
     ownerTokens: [],
     freeMintCount: [],
+    ownedTokens: 0,
 
 }
 
@@ -38,6 +39,7 @@ const badgeDataReducer = (state = initialState, action) => {
                 specialUri: action.payload.specialUri,
                 paused: action.payload.paused,
                 revealed: action.payload.revealed,
+                ownedTokens: action.payload.ownedTokens,
                 error: false,
                 errorMsg: "",
             }

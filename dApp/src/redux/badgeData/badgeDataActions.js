@@ -57,7 +57,8 @@ export const fetchBadgeData = (account) => {
                 let ownerTokens = await Badge.methods.walletOfOwner(account).call();
                 let paused = await Badge.methods.paused().call();
                 let freeMintCount = [];
-                
+                let ownedTokens = 0;
+
                 let badgeUri = await fetch('https://cyber9.mypinata.cloud/ipfs/QmYs78biqBmeSevEcC7RncvD1DVPnjyGKr5wXiQoVK1eqT/1.png');
                 let usedBadgeUri = await fetch('https://cyber9.mypinata.cloud/ipfs/QmSmxKFtvA2mX774Aj6FH4ospoJRhs9XZPgq9eDUbJhyV8/1.png');
                 // let specialUri = await fetch(`https://cyber9.mypinata.cloud/ipfs/QmUQGpKbhSJhVkqXKid17D1bTLNt2Uvo7Gb8R4qAuJ4sxn/1.png`); //CHANGE WHEN HAVE REAL URI
@@ -65,6 +66,7 @@ export const fetchBadgeData = (account) => {
                 for(let i = 0;i<ownerTokens.length;i++){
                     let MintCount = await Badge.methods.freeMintsLeft(ownerTokens[i]).call();
                     freeMintCount.push(MintCount);
+                    ownedTokens++
                 }
                 
                 dispatch(fetchDataSuccess({
@@ -77,7 +79,8 @@ export const fetchBadgeData = (account) => {
                     usedBadgeUri: usedBadgeUri.url,
                     // specialUri: specialUri.url,
                     paused: paused,
-                    revealed: revealed
+                    revealed: revealed,
+                    ownedTokens: ownedTokens
                 }));           
 
             }catch (err) {

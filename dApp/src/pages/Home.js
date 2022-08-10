@@ -1,5 +1,6 @@
 import React, { useEffect, useState} from 'react';
 import Button from "../components/Button";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { StyledContainer, StyledImage, StyledParagraph } from "../components/styles/Elements.style";
 
@@ -19,15 +20,15 @@ const Home = () => {
     const dispatch = useDispatch();
     const blockchain = useSelector((state) => state.blockchain);
     const badgeData = useSelector((state) => state.badgeData);
-    // const collectionData = useSelector((state) => state.cyber9Data);
+    const collectionData = useSelector((state) => state.cyber9Data);
     // const itemsData = useSelector((state) => state.itemsData);
     const [claimingBadge, setclaimingBadge] = useState(false);
-    // const [claimingCollection, setClaimingCollection] = useState(false);
+    const [claimingCollection, setClaimingCollection] = useState(false);
 
     //BADGE 
     const [badgeMintAmount, setBadgeMintAmount] = useState(1);
 
-    // const [mintAmount, setMintAmount] = useState(1);
+    const [mintAmount, setMintAmount] = useState(1);
     const [gasPrice, setGasPrice] = useState(null);
     const [gasLimit, setGasLimit] = useState(null);
 
@@ -85,41 +86,41 @@ const Home = () => {
                 dispatch(fetchBadgeData(blockchain.account));
             });
     }
-
+    console.log(badgeData)
     // mint collection
-    // const claimCollection = (_amount) => {
-    //     if (_amount <= 0) {
-    //         return;
-    //     }
-    //     setClaimingCollection(true);
-    //     //get gas estimations
-    //     blockchain.web3.eth.getGasPrice().then((res) =>{
-    //         setGasPrice(res);
-    //     });
-    //     collectionData.smartContract.methods.mint(_amount).estimateGas().then((res) =>{
-    //         setGasLimit(res);
-    //     });
+    const claimCollection = (_amount) => {
+        if (_amount <= 0) {
+            return;
+        }
+        setClaimingCollection(true);
+        //get gas estimations
+        blockchain.web3.eth.getGasPrice().then((res) =>{
+            setGasPrice(res);
+        });
+        collectionData.smartContract.methods.mint(_amount).estimateGas().then((res) =>{
+            setGasLimit(res);
+        });
         
-    //     collectionData.smartContract.methods
-    //         .mint(_amount)
-    //         .send({
-    //             gasPrice: gasPrice,
-    //             gasLimit: gasLimit,
-    //             to: collectionData.smartContract.address,
-    //             from: blockchain.account,
-    //             value: blockchain.web3.utils.toWei(
-    //                 ((Number(collectionData.cost) / 1e18) * _amount).toString(), "ether"), //NEED TO CHANGE COST TO CONTRACTS DATA
-    //         })
-    //         .once('error', (err) => {
-    //             console.log(err);
-    //             setClaimingCollection(false);
-    //         })
-    //         .then((receipt) => {
-    //             console.log(receipt);
-    //             setClaimingCollection(false);
-    //             dispatch(fetchCollectionData(blockchain.account));
-    //         });
-    // }
+        collectionData.smartContract.methods
+            .mint(_amount)
+            .send({
+                gasPrice: gasPrice,
+                gasLimit: gasLimit,
+                to: collectionData.smartContract.address,
+                from: blockchain.account,
+                value: blockchain.web3.utils.toWei(
+                    ((Number(collectionData.cost) / 1e18) * _amount).toString(), "ether"), //NEED TO CHANGE COST TO CONTRACTS DATA
+            })
+            .once('error', (err) => {
+                console.log(err);
+                setClaimingCollection(false);
+            })
+            .then((receipt) => {
+                console.log(receipt);
+                setClaimingCollection(false);
+                dispatch(fetchCollectionData(blockchain.account));
+            });
+    }
 
     // const claimCollectionFree = (badgeId) => {
     //     setClaimingCollection(true);
@@ -151,17 +152,17 @@ const Home = () => {
       
     // }
 
-    // const addMintAmount = () => {
-    //     let newMintAmount = mintAmount + 1;
-    //     if(newMintAmount > 10) newMintAmount = 10;
-    //     setMintAmount(newMintAmount);
-    // }
+    const addMintAmount = () => {
+        let newMintAmount = mintAmount + 1;
+        if(newMintAmount > 10) newMintAmount = 10;
+        setMintAmount(newMintAmount);
+    }
 
-    // const subMintAmount = () => {
-    //     let newMintAmount = mintAmount - 1;
-    //     if(newMintAmount < 1) newMintAmount = 1;
-    //     setMintAmount(newMintAmount);
-    // }
+    const subMintAmount = () => {
+        let newMintAmount = mintAmount - 1;
+        if(newMintAmount < 1) newMintAmount = 1;
+        setMintAmount(newMintAmount);
+    }
 
     const canMint = (isConnected) => {
         if(isConnected) { return false } else { return true };
@@ -181,7 +182,7 @@ const Home = () => {
     
     //CSS 
     const theme = useTheme();
-
+    console.log(badgeData)
     //COUNTDOWN LOGIC
     const [timeleft, settimeleft] = useState("");
     let countDownDate = new Date("May 09, 2022 00:00:00").getTime();
@@ -237,7 +238,7 @@ const Home = () => {
                         W={"55vw"}
                         H={"auto"} 
                         margin={"0 0 2% 0"} 
-
+                        maxW={"80rem"}
                         //RESPONSIVE
                         laptopW={"75vw"}
 
@@ -245,6 +246,10 @@ const Home = () => {
 
                         mobileLW={"100vw"}
                     />
+                    {/* TOTAL SUPPLY */}
+                    <StyledParagraph margin={"0 0 3.5% 0"} size="1.3rem">
+                        {(collectionData.loading && blockchain.connected) ? 'Loading smart contract...' : blockchain.connected ? `${collectionData.currentSupply}/${collectionData.totalSupply}` : ""}
+                    </StyledParagraph>
                     <StyledContainer W={"20vw"} margin={"auto"} 
                         display={"flex"}  
 
@@ -255,12 +260,12 @@ const Home = () => {
 
                         MobileLW={"30vw"}
                     >
-                        <Button text="-" onClick={() => {subBadgeAmount()}}
+                        <Button text="-" onClick={() => {subMintAmount()}}
                             bgColor={theme.colors.activeBtnBG} W={"2.5vw"} H={"2.5vw"}
                             color={theme.colors.activeBtn}
                             size={"1.333rem"}
 
-                            disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading || badgeData.paused}
+                            disabled={canMint(blockchain.connected) || claimingCollection || collectionData.loading}
                             bgDisabled={true}
                             colorDisabled={true}
 
@@ -271,28 +276,28 @@ const Home = () => {
                             tabletW = {"4vw"}
                             tabletH = {"4vw"}
                         />
-                        <Button text={`MINT ${badgeMintAmount}`} W={"10vw"} H={"2.5vw"} bgColor={theme.colors.activeBtnBG} 
+                        <Button text={`MINT ${mintAmount}`} W={"10vw"} H={"2.5vw"} bgColor={theme.colors.activeBtnBG} 
                             color={theme.colors.activeBtn} font={"Libre Baskerville, serif"}
                             
-                            onClick={() => {claimBadge(badgeMintAmount)}}
+                            onClick={() => {claimCollection(mintAmount)}}
 
-                            disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading || badgeData.paused}
+                            disabled={canMint(blockchain.connected) || claimingCollection || collectionData.loading}
                             bgDisabled={true}
                             colorDisabled={true}
 
-                            //RESPONSIVE
+                            //RESPONSIV
                             laptopW = {"12vw"}
                             laptopH = {"3.5vw"}
 
                             tabletW = {"15vw"}
                             tabletH = {"4vw"}
                         />
-                        <Button text="+" onClick={() => {addBadgeAmount()}}
+                        <Button text="+" onClick={() => {addMintAmount()}}
                             bgColor={theme.colors.activeBtnBG} W={"2.5vw"} H={"2.5vw"}
                             color={theme.colors.activeBtn}
                             size={"1.333rem"}
 
-                            disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading || badgeData.paused}
+                            disabled={canMint(blockchain.connected) || claimingCollection || collectionData.loading}
                             bgDisabled={true}
                             colorDisabled={true}
 
@@ -334,15 +339,13 @@ const Home = () => {
                     laptopH={"100%"}
                     
                     tabletW={"80vw"}
-
-                    // mobileLMargin={"10% auto auto auto"}
                 >
-                    <StyledImage className="gs_reveal reveal_fromLeft" src={exchangeBadge} alt="Badge Exchange Example" 
-                        W={"50%"} margin={"auto"} 
+                    <StyledImage src={exchangeBadge} alt="Badge Exchange Example" 
+                        W={"50%"} margin={"auto"} maxW={"50rem"}
                     />
 
-                    <StyledContainer className="gs_reveal"
-                        flex={"1 0 40%"} margin={"auto auto auto 3%"}
+                    <StyledContainer
+                        margin={"auto auto auto 3%"}
                     >                    
                         <StyledParagraph font={"Libre Baskerville, serif"}
                             spacing={"0.5rem"} align={"left"} color={theme.colors.title}
@@ -360,6 +363,59 @@ const Home = () => {
                             Badges will be available for a limited time 
                             with a total supply of 2000. Each address is limited to minting a maximum of 5 badges. Make sure to get yours before they're gone! 
                         </StyledParagraph>
+                        <br/><br/><br/>
+                        <StyledContainer display={"flex"} alignItems={"start"}>
+                            <Button text={`MINT BADGE`} W={"8vw"} H={"3vw"} bgColor={theme.colors.c9red} 
+                                color={"white"} font={"Libre Baskerville, serif"} size={"0.7rem"} margin={"0"}
+                                hoverColor={theme.colors.bodyText}
+                                onClick={() => {claimBadge(badgeMintAmount)}}
+
+                                disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading || badgeData.paused}
+                                bgDisabled={true}
+                                colorDisabled={true}
+
+                                //RESPONSIVE
+                                laptopW = {"10vw"}
+                                laptopH = {"3.5vw"}
+                                laptopFont = {"0.6rem"}
+
+                                tabletW = {"13vw"}
+                                tabletH = {"3.5vw"}
+                                tabletFont = {"0.5rem"}
+                            />
+                        </StyledContainer>
+                        <br/><br/><br/>
+                        
+                        {badgeData.ownerTokens < 1 ? (
+                            <></>
+                        ):(
+                            <StyledContainer display={"flex"} alignItems={"start"} 
+                                flexDirection={"column"} margin={"0"}
+                            >
+                                <StyledParagraph align={"left"} size="0.9rem">
+                                    YOU CURRENTLY HAVE {badgeData.ownedTokens} BADGES
+                                </StyledParagraph>
+                                <br/>
+                                <Link to="/Collection">
+                                    <Button text="REDEEM NOW" W={"8vw"} H={"3vw"} bgColor={theme.colors.c9red}
+                                        margin={"0"} hoverColor={theme.colors.bodyText} size={"0.7rem"} font={"Libre Baskerville, serif"}
+                                        onClick={() => {window.scrollTo(0,0)}} 
+                                    
+                                        //RESPONSIVE
+                                        laptopW = {"10vw"}
+                                        laptopH = {"3.5vw"}
+                                        laptopFont = {"0.6rem"}
+
+                                        tabletW = {"13vw"}
+                                        tabletH = {"3.5vw"}
+                                        tabletFont = {"0.5rem"} 
+                                    >
+
+                                    </Button>
+                                </Link>
+                            </StyledContainer>
+                        )}
+                        
                     </StyledContainer>
 
                 </StyledContainer>
@@ -379,7 +435,6 @@ const Home = () => {
                     mobileLMargin={"20% auto 25% auto"}
                 >
                     <StyledParagraph 
-                        className="gs_reveal"
                         font={"Libre Baskerville, serif"}
                         spacing={"0.5rem"} align={"center"}
                         color={"white"}
@@ -387,7 +442,7 @@ const Home = () => {
                         ORIGIN
                     </StyledParagraph>
                     <br/><br/>
-                    <StyledParagraph className="gs_reveal" font={"Jaldi, sans-serif"}>
+                    <StyledParagraph font={"Jaldi, sans-serif"}>
                         The year is 1680 ADK (After Dragon King), on a distant exoplanet, HD 173416-b, the Nine
                         sons of the dragon have formed an alliance known as <b>CYBER9</b>. The eldest son of each clan is 
                         leading a counterattack their arch enemy, the <i>DengLong</i> beasts. These creatures hunt and consume descendants 
@@ -409,7 +464,6 @@ const Home = () => {
                     margin={"0 auto"}
                 >
                     <StyledParagraph 
-                        className="gs_reveal"
                         font={"Libre Baskerville, serif"}
                         spacing={"0.5rem"} align={"center"} 
                         color={"white"}
@@ -417,11 +471,11 @@ const Home = () => {
                         ROADMAP
                     </StyledParagraph>
                     <br/><br/><br/>
-                    <StyledImage className="gs_reveal"
+                    {/* <StyledImage
                         src={roadmap} alt="Roadmap information"
                         bgPos={"center"} W={"45vw"}
                         margin={"5% auto"}
-                    />
+                    /> */}
                     <br/><br/>
                     <StyledContainer W={theme.width.MainContent}
 
@@ -430,7 +484,7 @@ const Home = () => {
 
                         tabletW={theme.width.ContentTablet}
                     >
-                        <StyledParagraph className="gs_reveal" align={"left"} font={"Jaldi, sans-serif"}>
+                        <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
                             <span style={{letterSpacing: '0.3rem'}}>AIRDROP</span>
                             <br/><br/>
                             Lucky Fortune Cats are fabled artifacts from ancient times. They are highly valuable and scarce. By simply possesssing one,
@@ -441,7 +495,7 @@ const Home = () => {
                             to receive a CYBER9 badge for free.
                         <br/><br/><br/>
                         </StyledParagraph>
-                        <StyledParagraph className="gs_reveal" align={"left"} font={"Jaldi, sans-serif"}>
+                        <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
                             <span style={{letterSpacing: '0.3rem'}}>DISCORD</span>
                             <br/><br/>
                             The communications systems are now operational. The nine clans will now have a direct line of communication open between them for fast and effective
@@ -451,7 +505,7 @@ const Home = () => {
                             eye out to not miss them. 
                             <br/><br/><br/>
                         </StyledParagraph>
-                        <StyledParagraph className="gs_reveal" align={"left"} font={"Jaldi, sans-serif"}>
+                        <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
                             <span style={{letterSpacing: '0.3rem'}}>WEBSITE</span>
                             <br/><br/>
                             The headquarters first build will be in service. This marks the end of the planning phase. 
@@ -463,7 +517,7 @@ const Home = () => {
                             official polygon documentation.
                             <br/><br/><br/>
                         </StyledParagraph>
-                        <StyledParagraph className="gs_reveal" align={"left"} font={"Jaldi, sans-serif"}>
+                        <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
                         <span style={{letterSpacing: '0.3rem'}}>PHASE 1</span>
                         <br/><br/>
                         CYBER9 Badge's will now be available to the public. The Dragon King has only made 2000 of them in his lifetime.
@@ -474,7 +528,7 @@ const Home = () => {
                         There is a maximum of five mints per address. Each badge will have a mint cost of 20 MATIC.
                         <br/><br/><br/>
                         </StyledParagraph>
-                            <StyledParagraph className="gs_reveal" align={"left"} font={"Jaldi, sans-serif"}>
+                            <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
                             <span style={{letterSpacing: '0.3rem'}}>FUTURE UPDATES</span>
                             <br/><br/>
                             Once phase 1 concludes, phase 2 will be set in motion. The nine clans will now be ready to send their best descendants 
@@ -486,6 +540,7 @@ const Home = () => {
                 </StyledContainer>
 
             </StyledContainer>
+            
         </StyledContainer>     
        
     ) 
@@ -517,22 +572,7 @@ export default Home;
                         }} />
                     </StyledContainer>
 
-                    <StyledContainer> 
-                        <h1>USERS ARTIFACT COLLECTION</h1>
-                        <ul>
-                            {badgeData.ownerTokens.map((data, i) => (
-                                    <li key={i}>
-                                        <p>Badge #{data}</p>
-                                        <img src={checkBadgeUri(i)} alt="badge" style={{width: "150px",height: "150 px"}}></img>
-                                        <p>{badgeData.freeMintCount[i]} free mint available</p>
-                                        <Button text="Use Free Mint" disabled={canMint(blockchain.connected) || claimingCollection || badgeData.freeMintCount[i] === '0' || collectionData.loading} onClick={() => {
-                                            claimCollectionFree(data)                                         
-                                        }}/>
-                                    </li>     
-                                ) 
-                            )}
-                        </ul>
-                    </StyledContainer>  
+                    
                 </StyledContainer>
             ) : (
                 <StyledContainer 

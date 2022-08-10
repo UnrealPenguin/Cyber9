@@ -45,7 +45,7 @@ export const fetchCollectionData = (account, sortType) => {
         const { ethereum } = window;
         Web3EthContract.setProvider(ethereum);
 
-        const provider = CONFIG.WEBSOCKET; //CHANGE WHEN LIVE
+        const provider = CONFIG.WEBSOCKET_TEST; //CHANGE WHEN LIVE
         const options = {
             // Enable auto reconnection
             reconnect: {

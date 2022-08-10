@@ -749,7 +749,7 @@ const Collection = () => {
     }
 
     return (
-        <StyledContainer>
+        <StyledContainer margin={"20% 0 0 0"}>
             <h1>USERS CYBER9 COLLECTION</h1>
             <Button text='Hunt DengLong' onClick={() => {
                 scoutEnemy();

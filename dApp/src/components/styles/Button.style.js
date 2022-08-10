@@ -3,7 +3,7 @@ import { device } from "./GlobalStyles";
 
 export const StyledButton = styled.button`
     color: ${({ color }) => color ? color : "white"};
-    margin: 0 auto;
+    margin: ${({ margin }) => margin ? margin : "0 auto"};
     padding: 0;
     background: none;
 	border: none;
@@ -28,8 +28,13 @@ export const StyledButton = styled.button`
         color: ${({ colorDisabled }) => colorDisabled ? 'rgba(169,169,169, 0.8)' : ""};
     }
 
+    @media ${device.laptop} {
+        font-size: ${({ laptopFont }) => laptopFont ? laptopFont : ""}
+    }
+
     @media ${device.tablet} {
         width: ${({ tabletW }) => tabletW ? tabletW : ""};
         height: ${({ tabletH }) => tabletH ? tabletH : ""};
+        font-size: ${({ tabletFont }) => tabletFont ? tabletFont : ""};
     }
 `

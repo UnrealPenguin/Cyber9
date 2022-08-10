@@ -111,6 +111,7 @@ export const StyledImage = styled.img`
     margin: ${({ margin }) => margin ? margin : ""};
     opacity: ${({ opacity }) => opacity ? opacity : ""};
     flex: ${({ flex }) => flex ? flex : ""};
+    max-width: ${({ maxW }) => maxW ? maxW : ""};
 
     @media ${device.laptop} {
         width: ${({ laptopW }) => laptopW ? laptopW : ""};

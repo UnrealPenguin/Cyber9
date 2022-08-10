@@ -24,7 +24,8 @@ const theme = {
       c9red: "#863135",
       title: "white",
       bodyText: "#D1D1D1",
-      activeBtn: "#202020"
+      activeBtn: "#202020",
+      activeLink: "#85585a"
     }
   }
 

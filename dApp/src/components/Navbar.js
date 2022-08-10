@@ -1,7 +1,7 @@
 import { useDispatch, useSelector} from 'react-redux';
 import { connect } from "../redux/blockchain/blockchainActions";
 import { StyledContainer, StyledImage, StyledUl, StyledLi } from "./styles/Elements.style";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation} from "react-router-dom";
 import Button from "./Button";
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,6 +17,7 @@ const Navbar = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
     const blockchain = useSelector((state) => state.blockchain);
     const collectionData = useSelector((state) => state.cyber9Data);
 
@@ -53,7 +54,6 @@ const Navbar = () => {
         });
     }, [])
   
-
     //CSS
     const theme = useTheme();
 
@@ -84,7 +84,7 @@ const Navbar = () => {
                 mobileLW={theme.width.NavMobileL}
             >
                 <StyledContainer>
-                    <Link to="/">
+                    <Link to="/" >
                             <StyledImage 
                                 src={logo} alt="Cyber9"
                                 W={"3.5vw"}
@@ -98,6 +98,33 @@ const Navbar = () => {
                     display={"flex"}
                     mLeft={"auto"}
                 >
+                    <StyledLi margin={"0 1vw 0 0"}>
+                        <Link to="/">
+                            <Button text="HOME" hoverColor={theme.colors.c9red} font={"Jaldi, sans-serif"}
+                                color={location.pathname === "/" ? theme.colors.activeLink : ""}  
+                            />
+                        </Link>
+                    </StyledLi>
+                    {/* FOR COLLECTION */}
+                    <StyledLi margin={"0 1vw 0 0"}>
+                        <Link to="/Collection">
+                            {location.pathname === "/Collection" ? (
+                                <Button text="COLLECTION" font={"Jaldi, sans-serif"} 
+                                    disabled={restricted || !blockchain.connected ? true : false}
+                                    color={theme.colors.activeLink}
+                                    hoverColor={restricted || !blockchain.connected ? "grey" : theme.colors.c9red}
+                                />
+                            ):(
+                                <Button text="COLLECTION" font={"Jaldi, sans-serif"} 
+                                    disabled={restricted || !blockchain.connected ? true : false}
+                                    color={restricted || !blockchain.connected ? "grey" : ""}
+                                    hoverColor={restricted || !blockchain.connected ? "grey" : theme.colors.c9red}
+                                />
+                            )}
+                            
+                        </Link>
+                    </StyledLi>
+                    
                     <StyledLi>
                         {!blockchain.connected ? (
                             <Button text="CONNECT" onClick={(e) => {
@@ -115,12 +142,6 @@ const Navbar = () => {
                         )}
                     </StyledLi>
 
-                    {/* FOR COLLECTION */}
-                    {/* <StyledLi margin={"0 0 0 1vw"}>
-                        <Link to="/Collection">
-                            <Button text="Collection" disabled={restricted} hoverColor={theme.colors.c9red} />
-                        </Link>
-                    </StyledLi> */}
                     
                 </StyledUl>
             </StyledContainer>   

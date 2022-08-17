@@ -59,7 +59,7 @@ export const fetchItemsData = (_account) => {
             
             let imgArray = [];
             for(let i = 1; i<5;i++) {
-                let uri = await fetch(`https://cyber9.mypinata.cloud/ipfs/QmUQGpKbhSJhVkqXKid17D1bTLNt2Uvo7Gb8R4qAuJ4sxn/${i}.png`); 
+                let uri = await fetch(`https://cyber9.mypinata.cloud/ipfs/QmTThCx3U9Zqa53ySZSZrZVNgvfYUq5YetWhiKnDWd7nCg/${i}.png`); 
                 imgArray.push(uri.url);
             }
 

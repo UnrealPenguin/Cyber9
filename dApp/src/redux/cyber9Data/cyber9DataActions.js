@@ -160,7 +160,7 @@ export const fetchCollectionData = (account, sortType) => {
                     let charactersCD = await Collection.methods.timeLeft(_array[i]).call();
                     let maxHp = await Collection.methods.characterMaxHp(_array[i]).call();
                     let expStored = await Collection.methods.storedExp(_array[i]).call();
-                    let img = await fetch(`https://cyber9.mypinata.cloud/ipfs/QmYs78biqBmeSevEcC7RncvD1DVPnjyGKr5wXiQoVK1eqT/1.png`);
+                    let img = await fetch(`https://cyber9.mypinata.cloud/ipfs/QmeERoiu543pifskNGZ1eY2qtxij6Ssc7pr7w6U5YzF7HR/${i+1}.png`);
                     
                     stakeArray.push(isStaked);
                     characterStats.push(stats);

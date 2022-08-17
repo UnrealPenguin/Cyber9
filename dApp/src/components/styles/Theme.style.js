@@ -3,6 +3,7 @@ const theme = {
     width: {
       Nav: "70vw",
       MainContent: "55vw",
+      Collection: "60vw",
 
       //laptop
       NavLaptop: "75vw",
@@ -21,6 +22,8 @@ const theme = {
       bodyBackground: "#1A1A1A",
       activeBtnBG: "#E8E8E8",
 
+      containerColor: '#262626',
+      selected: '#333333',
       c9red: "#863135",
       title: "white",
       bodyText: "#D1D1D1",

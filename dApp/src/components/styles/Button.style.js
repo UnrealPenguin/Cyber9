@@ -17,6 +17,7 @@ export const StyledButton = styled.button`
     display: flex;
     justify-content: center;
     align-items: center;
+    letter-spacing: ${({ spacing }) => spacing ? spacing : ""}; 
 
     &:hover{
         color: ${({ hoverColor }) => hoverColor ? hoverColor : ""};

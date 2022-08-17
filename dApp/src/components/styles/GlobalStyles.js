@@ -45,6 +45,7 @@ const GlobalStyles = createGlobalStyle`
 
     li {
         list-style: none;
+        display: inline-block;
     }
 
     a {

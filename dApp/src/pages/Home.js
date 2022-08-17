@@ -86,7 +86,7 @@ const Home = () => {
                 dispatch(fetchBadgeData(blockchain.account));
             });
     }
-    console.log(badgeData)
+
     // mint collection
     const claimCollection = (_amount) => {
         if (_amount <= 0) {
@@ -367,7 +367,7 @@ const Home = () => {
                         <StyledContainer display={"flex"} alignItems={"start"}>
                             <Button text={`MINT BADGE`} W={"8vw"} H={"3vw"} bgColor={theme.colors.c9red} 
                                 color={"white"} font={"Libre Baskerville, serif"} size={"0.7rem"} margin={"0"}
-                                hoverColor={theme.colors.bodyText}
+                                hoverColor={theme.colors.bodyText} spacing={"0.2rem"}
                                 onClick={() => {claimBadge(badgeMintAmount)}}
 
                                 disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading || badgeData.paused}
@@ -399,6 +399,7 @@ const Home = () => {
                                 <Link to="/Collection">
                                     <Button text="REDEEM NOW" W={"8vw"} H={"3vw"} bgColor={theme.colors.c9red}
                                         margin={"0"} hoverColor={theme.colors.bodyText} size={"0.7rem"} font={"Libre Baskerville, serif"}
+                                        spacing={"0.2rem"}
                                         onClick={() => {window.scrollTo(0,0)}} 
                                     
                                         //RESPONSIVE

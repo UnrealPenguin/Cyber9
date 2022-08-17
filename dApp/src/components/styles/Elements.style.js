@@ -36,8 +36,15 @@ export const StyledContainer = styled.div`
     z-index: ${({ index }) => index ? index : ""};
     border-bottom: ${({ borderBot }) => borderBot ? borderBot : ""};
     border-top: ${({ borderTop }) => borderTop ? borderTop : ""};
+    border-radius: ${({ borderRadius }) => borderRadius ? borderRadius : ""};
     text-align: center;
     opacity: ${({ opacity }) => opacity ? opacity : ""};
+    border: ${({ border }) => border ? border : ""};
+
+    &:hover{
+        box-shadow: ${({ highlight }) => highlight ? highlight : ""};
+        border: ${({ borderHover }) => borderHover? borderHover : ""};
+    }
 
     @media ${device.laptop} {
         width: ${({ laptopW }) => laptopW ? laptopW : ""};
@@ -96,6 +103,7 @@ export const StyledParagraph = styled.p`
     left: ${({ left }) => left ? left : ""};
     transform: ${({ transform }) => transform ? transform : ""};
     user-select: ${({ select }) => select ? select : ""};
+    line-height: ${({ lineHeight }) => lineHeight ? lineHeight : ""};
     
     overflow: hidden;
     word-break: break-word;
@@ -112,6 +120,8 @@ export const StyledImage = styled.img`
     opacity: ${({ opacity }) => opacity ? opacity : ""};
     flex: ${({ flex }) => flex ? flex : ""};
     max-width: ${({ maxW }) => maxW ? maxW : ""};
+    border-radius: ${({ borderRadius }) => borderRadius ? borderRadius : ""};
+    border: ${({ border }) => border ? border : ""};
 
     @media ${device.laptop} {
         width: ${({ laptopW }) => laptopW ? laptopW : ""};

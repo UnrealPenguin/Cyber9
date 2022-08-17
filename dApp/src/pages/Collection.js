@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react';
-import { StyledContainer } from "../components/styles/Elements.style";
+import { StyledContainer, StyledImage, StyledParagraph, StyledUl, StyledLi } from "../components/styles/Elements.style";
 import { useDispatch, useSelector  } from 'react-redux';
 import Button from "../components/Button";
-import { FcCheckmark } from 'react-icons/fc';
+import { useTheme } from 'styled-components';
 
+import { fetchBadgeData } from "../redux/badgeData/badgeDataActions";
 import { fetchCollectionData } from "../redux/cyber9Data/cyber9DataActions";
-
 import { fetchItemsData } from "../redux/itemsData/itemsDataActions";
 
 const Collection = () => {
     const dispatch = useDispatch();
     const blockchain = useSelector((state) => state.blockchain);
     const collectionData = useSelector((state) => state.cyber9Data);
+    const badgeData = useSelector((state) => state.badgeData);
     const itemsData = useSelector((state) => state.itemsData);
+    console.log(badgeData);
 
     //selection logic
     const [isSelected, updateSelection] = useState([]);
@@ -41,7 +43,6 @@ const Collection = () => {
     const [hasCD, setHasCD] = useState(false);
     const [spawning, setSpawning] = useState(false);
 
-
     //clan
     const [c1Bonus, setC1] = useState(0);
     const [c2Bonus, setC2] = useState(0);
@@ -61,7 +62,9 @@ const Collection = () => {
     const [buyingItem, setBuyingItem] = useState(false);
     const [usingItem, setUsingItem] = useState(false);
     
+    //If the user changes account
     useEffect(() => {
+        dispatch(fetchBadgeData(blockchain.account));
         dispatch(fetchCollectionData(blockchain.account));
         dispatch(fetchItemsData(blockchain.account));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -748,16 +751,49 @@ const Collection = () => {
         }
     }
 
+    //theme 
+    const theme = useTheme();
+
     return (
-        <StyledContainer margin={"20% 0 0 0"}>
-            <h1>USERS CYBER9 COLLECTION</h1>
+        <StyledContainer margin={"8% auto 0 auto"} W={theme.width.Nav}>
+            {/* If user owns more than one badge */}
+            {badgeData.ownerTokens.length > 0 ? (
+                <StyledContainer bgColor={theme.colors.containerColor} borderRadius={"3em"} padding={"2em"} 
+                    maxW={"1300px"} margin={"0 auto"}
+                >
+                    <StyledParagraph>BADGE COLLECTION</StyledParagraph>
+                    <StyledUl display={"flex"} flexWrap={"wrap"} justify={"space-around"}>
+                        {badgeData.ownerTokens.map ((data, i) => (
+                            <StyledContainer W={"30em"} H={"40em"}>
+                                <StyledLi key={data}>
+                                    <StyledParagraph>Badge #{data}</StyledParagraph>
+                                    <StyledImage src={badgeData.freeMintCount[i] > 0 ? badgeData.badgeUri : badgeData.usedBadgeUri} alt={`Badge #${data}`} style={{width: "23em",height: "23em"}}/>
+                                    {badgeData.freeMintCount[i] > 0 ? (
+                                        <StyledParagraph>
+                                            One of the 2000 mythical badges from the dragon king. Possessing one allows its owner to mint a descendent from the Cyber9 collection for free. It is said the dragon king infused his power into each badge. Acquire one before they vanish from this realm forever...
+                                            <Button text="USE FREE MINT" margin={"0"}/>
+                                        </StyledParagraph>
+                                        
+                                    ) : (
+                                        <StyledParagraph>
+                                            A broken badge from the dragon king, it has already been used to mint a descendent from the Cyber9 collection. Although it is shattered, a faint power is still emanating from the remnants. Perhaps this fragmented badge might still hold some value.    
+                                        </StyledParagraph>
+                                    )}
+                                </StyledLi>
+                            </StyledContainer>
+                        ))}
+                    </StyledUl>
+                </StyledContainer>
+            ):(
+                <></>
+            )}
             <Button text='Hunt DengLong' onClick={() => {
                 scoutEnemy();
             }} disabled={spawning || collectionData.isSpawned || collectionData.loading || collectionData.usable === false} />
             <p>You currently have {collectionData.tokenBalance} $BEI</p>
             <p>You currently have {collectionData.storedBalance} $BEI stored</p>
 
-            <StyledContainer>
+            {/* <StyledContainer>
                 <p>INVENTORY</p>
                 <p>You currently have {itemsData.orbBalance} Orbs</p>
                 <p>You currently have {itemsData.hpBalance} Hp kit(s)</p>
@@ -787,7 +823,7 @@ const Collection = () => {
                 <StyledContainer>
                     <p>Enemy Hp: {collectionData.enemyStats.hp} </p>
                     <p>Enemy Attack: {parseInt(collectionData.enemyStats.atk)} ~ {parseInt(collectionData.enemyStats.atk)*2}</p>             
-                </StyledContainer> : ""} 
+                </StyledContainer> : ""}  */}
 
             <StyledContainer>
                 {stakedSelection === false && 
@@ -823,50 +859,61 @@ const Collection = () => {
             </StyledContainer>
                 {(collectionData.loading === true) ? <p>loading...</p> : ""}
             <StyledContainer>
-            <ul>             
-                {collectionData.ownerTokens.map((data, i) => (
-                    <li key={data}>
-                    <StyledContainer onClick={() => {
-                        updateSelect(i, data);
-                    }} style={checkStatus(i) === 'Reviving' || checkStatus(i) === 'On Cooldown' ? {pointerEvents: "none"} : {pointerEvents: "auto"}}>
-                        <p>Descendent #{data}</p>
-                        {isSelected[i] && isSelected[i].selected && <FcCheckmark /> }
-                        <img src={collectionData.imgArray[i]} alt={`Descendent #${data}`} style={{width: "150px",height: "150 px"}}></img>
-                        <p>Status: {checkStatus(i)}</p>
-                        {collectionData.totalYield[i].balance !== '0' ? <p>Current $BEI Yield: {collectionData.totalYield[i].balance}</p> : "" }
-                        {collectionData.totalYield[i].experience !== '0' ? <p>Current EXP Yield: {collectionData.totalYield[i].experience}</p> : "" }
-                        {collectionData.storedExp[i] !== '0' ? <p>Stored EXP : {collectionData.storedExp[i]} </p> : ""}
-                        {collectionData.CD[i] !== '0' ? <p>Cooldown: {getTime(collectionData.CD[i])}</p> : ""}
-                        <p>Level: {collectionData.characterStats[i].level}</p>
-                        <p>Hp: {collectionData.characterStats[i].hp}/{collectionData.characterMaxHp[i]}</p>
-                        <p>Attack: {parseInt(collectionData.characterStats[i].strength)*5} ~ {(parseInt(collectionData.characterStats[i].strength)*5)*2}</p>
-                        <p>Strength: {collectionData.characterStats[i].strength}</p>
-                        <p>Agility: {parseInt(collectionData.characterStats[i].agility) + (c2Bonus > 0 ? c2Bonus : 0)}</p>
-                        <p>Dexterity: {parseInt(collectionData.characterStats[i].dexterity) + (c3Bonus > 0 ? c3Bonus : 0)}</p>
-                        <p>Luck: {parseInt(collectionData.characterStats[i].luck) + (c4Bonus > 0 ? c4Bonus : 0)}</p>
-                        <p>Intelligence: {parseInt(collectionData.characterStats[i].intelligence) + (c5Bonus > 0 ? c5Bonus : 0)}</p>                        
-                        <p>{collectionData.characterStats[i].level === "50" ? "" : `Experience: ${collectionData.characterStats[i].experience}/${collectionData.expRequired[i]}`}</p>
-                        <p>{enoughOrbs(collectionData.characterStats[i].level).orbsNeeded !== 0 ? `Orbs required: ${enoughOrbs(collectionData.characterStats[i].level).orbsNeeded}` : ""}</p>
-                    </StyledContainer>
-                        <Button text="Level up" onClick={() => {
-                            levelUp(data, i);
-                        }} disabled={checkStatus(i) === "Staked" || checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || parseInt(collectionData.characterStats[i].experience) < parseInt(collectionData.expRequired[i]) || enoughOrbs(collectionData.characterStats[i].level).disabled || collectionData.characterStats[i].level === "50"}/>
-                        <Button text="heal" onClick={() => {
-                            healCharacter(data);
-                        }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.characterMaxHp[i] === collectionData.characterStats[i].hp || hasItems("hp")}/>
-                        <Button text="reset cooldown" onClick={() => {
-                            resetCooldown(data);
-                        }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.CD[i] === '0' || hasItems("cd")}/>
-                        {data > 9 ?
-                            <Button text="Reroll stats" onClick={() => {
-                                rerollStats(data);
-                            }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.CD[i] !== '0' || collectionData.characterStats[i].hp === '0' || hasItems("statReset")}/>
-                        : "" }
-                        <br />
-                        <br />
-                    </li>     
-                ))}
-            </ul>
+                <StyledParagraph>
+                    CYBER9 COLLECTION
+                </StyledParagraph>
+            </StyledContainer>
+            <StyledContainer W={theme.width.Nav} maxW={"1400px"} margin={"0 auto"}>
+                <StyledUl display={"flex"} flexWrap={"wrap"} justify={"space-around"}>             
+                    {collectionData.ownerTokens.map((data, i) => (
+                        <StyledContainer onClick={() => {
+                            updateSelect(i, data);
+                            }} style={checkStatus(i) === 'Reviving' || checkStatus(i) === 'On Cooldown' ? {pointerEvents: "none"} : {pointerEvents: "auto"}}
+                            margin={"3em 1em"} padding={"3em 3em"} bgColor={isSelected[i] && isSelected[i].selected ? theme.colors.selected : theme.colors.containerColor }
+                            borderRadius={"1em"} border={isSelected[i] && isSelected[i].selected  ? "" : "1px #595959 solid"} 
+                            highlight={isSelected[i] && isSelected[i].selected ? `0 0 2em ${theme.colors.c9red}` : "0 0 2em #a6a6a6"}
+                        >
+
+                            <StyledLi key={data}>
+                                <StyledParagraph align={"left"}>Descendent #{data}</StyledParagraph>
+                                <StyledImage src={collectionData.imgArray[i]} alt={`Descendent #${data}`} style={{width: "23em",height: "23em"}} 
+                                    border={"2px #303030 solid"} borderRadius={"0.5em"}
+                                />
+                                <StyledParagraph align={"left"} lineHeight={"2em"}>Status: {checkStatus(i)}<br/>
+                                {collectionData.totalYield[i].balance !== '0' ? `Current $BEI Yield: ${collectionData.totalYield[i].balance} \n` : "" }
+                                {collectionData.totalYield[i].experience !== '0' ? `Current EXP Yield: ${collectionData.totalYield[i].experience} \n` : "" }
+                                {collectionData.storedExp[i] !== '0' ? `Stored EXP : ${collectionData.storedExp[i]} \n` : ""}
+                                {collectionData.CD[i] !== '0' ? `Cooldown: ${getTime(collectionData.CD[i])} \n` : ""}
+                                Level: {collectionData.characterStats[i].level}<br/>
+                                Hp: {collectionData.characterStats[i].hp}/{collectionData.characterMaxHp[i]}<br/>
+                                Attack: {parseInt(collectionData.characterStats[i].strength)*5} ~ {(parseInt(collectionData.characterStats[i].strength)*5)*2}<br/>
+                                Strength: {collectionData.characterStats[i].strength}<br/>
+                                Agility: {parseInt(collectionData.characterStats[i].agility) + (c2Bonus > 0 ? c2Bonus : 0)}<br/>
+                                Dexterity: {parseInt(collectionData.characterStats[i].dexterity) + (c3Bonus > 0 ? c3Bonus : 0)}<br/>
+                                Luck: {parseInt(collectionData.characterStats[i].luck) + (c4Bonus > 0 ? c4Bonus : 0)}<br/>
+                                Intelligence: {parseInt(collectionData.characterStats[i].intelligence) + (c5Bonus > 0 ? c5Bonus : 0)}<br/>                        
+                                {collectionData.characterStats[i].level === "50" ? "" : `Experience: ${collectionData.characterStats[i].experience}/${collectionData.expRequired[i]}`}<br/>
+                                {enoughOrbs(collectionData.characterStats[i].level).orbsNeeded !== 0 ? `Orbs required: ${enoughOrbs(collectionData.characterStats[i].level).orbsNeeded}` : ""}<br/>
+                                </StyledParagraph>
+                                <Button text="Level up" onClick={() => {
+                                    levelUp(data, i);
+                                }} disabled={checkStatus(i) === "Staked" || checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || parseInt(collectionData.characterStats[i].experience) < parseInt(collectionData.expRequired[i]) || enoughOrbs(collectionData.characterStats[i].level).disabled || collectionData.characterStats[i].level === "50"}/>
+                                <Button text="heal" onClick={() => {
+                                    healCharacter(data);
+                                }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.characterMaxHp[i] === collectionData.characterStats[i].hp || hasItems("hp")}/>
+                                <Button text="reset cooldown" onClick={() => {
+                                    resetCooldown(data);
+                                }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.CD[i] === '0' || hasItems("cd")}/>
+                                {data > 9 ?
+                                    <Button text="Reroll stats" onClick={() => {
+                                        rerollStats(data);
+                                    }} disabled={checkStatus(i) === 'Reviving' || lvling || collectionData.loading || usingItem || collectionData.CD[i] !== '0' || collectionData.characterStats[i].hp === '0' || hasItems("statReset")}/>
+                                : "" }
+                            </StyledLi>   
+
+                        </StyledContainer>
+                    ))}
+                </StyledUl>
             </StyledContainer>
             <StyledContainer>
                 <p>Store</p>

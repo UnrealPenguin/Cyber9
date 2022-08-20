@@ -10,7 +10,10 @@ export const StyledContainer = styled.div`
     max-height: ${({ maxH }) => maxH ? maxH : ""};
 
     margin: ${({ margin }) => margin ? margin : ""};
+    margin-left: ${({ mLeft }) => mLeft ? mLeft : ""};
     padding: ${({ padding }) => padding ? padding : ""};
+
+    transform: ${({ transform }) => transform ? transform : ""};
 
     position: ${({ position }) => position ? position : ""};
     top: ${({ top }) => top ? top : ""};
@@ -40,10 +43,21 @@ export const StyledContainer = styled.div`
     text-align: center;
     opacity: ${({ opacity }) => opacity ? opacity : ""};
     border: ${({ border }) => border ? border : ""};
-
+    cursor: ${({ cursor }) => cursor ? cursor : ""};
+    
     &:hover{
         box-shadow: ${({ highlight }) => highlight ? highlight : ""};
         border: ${({ borderHover }) => borderHover? borderHover : ""};
+
+    }
+
+    &:before{
+        content: "";
+        border-style: ${({ arrow }) => arrow ? "solid" : ""};
+        border-width: ${({ arrow }) => arrow ? "0 7.5px 8px 7.5px" : ""} ;
+        border-color: ${({ arrow }) => arrow ? "transparent transparent #666666 transparent": ""};
+        position: ${({ arrow }) => arrow ? "absolute" : ""};
+        top: ${({ arrow }) => arrow ? "-8px" : ""};
     }
 
     @media ${device.laptop} {
@@ -105,6 +119,7 @@ export const StyledParagraph = styled.p`
     user-select: ${({ select }) => select ? select : ""};
     line-height: ${({ lineHeight }) => lineHeight ? lineHeight : ""};
     
+    text-decoration: ${({ decor }) => decor ? decor : ""};
     overflow: hidden;
     word-break: break-word;
 `
@@ -144,6 +159,14 @@ export const StyledImage = styled.img`
         margin: ${({ mobileLMargin }) => mobileLMargin ? mobileLMargin : ""}; 
     }
 
+`
+
+export const StyledSelect = styled.select`
+    width: ${({ W }) => W ? W : ""};
+    height: ${({ H }) => H ? H : ""};
+    background-color: ${({ bgColor }) => bgColor ? bgColor : ""};
+    margin: ${({ margin }) => margin ? margin : ""};
+    text-align: ${({ align }) => align ? align : "center"};
 `
 
 export const StyledUl = styled.ul`

@@ -60,7 +60,6 @@ const GlobalStyles = createGlobalStyle`
     p {
         min-height: 1rem;
     }
-
 `
 export default GlobalStyles;
 

@@ -122,36 +122,6 @@ const Home = () => {
             });
     }
 
-    // const claimCollectionFree = (badgeId) => {
-    //     setClaimingCollection(true);
-    //     //get gas estimations
-    //     blockchain.web3.eth.getGasPrice().then((res) =>{
-    //         setGasPrice(res);
-    //     });
-    //     collectionData.smartContract.methods.freeMint(badgeId).estimateGas().then((res) =>{
-    //         setGasLimit(res);
-    //     });
-    //     collectionData.smartContract.methods
-    //     .freeMint(badgeId)
-    //     .send({
-    //         gasPrice: gasPrice,
-    //         gasLimit: gasLimit,
-    //         to: collectionData.smartContract.address,
-    //         from: blockchain.account,
-    //     })
-    //     .once('error', (err) => {
-    //         console.log(err);
-    //         setClaimingCollection(false);
-    //     })
-    //     .then((receipt) => {
-    //         console.log(receipt);
-    //         setClaimingCollection(false);
-    //         dispatch(fetchBadgeData(blockchain.account));
-    //         dispatch(fetchCollectionData(blockchain.account));
-    //     });
-      
-    // }
-
     const addMintAmount = () => {
         let newMintAmount = mintAmount + 1;
         if(newMintAmount > 10) newMintAmount = 10;
@@ -168,21 +138,11 @@ const Home = () => {
         if(isConnected) { return false } else { return true };
     }
     
-    // const checkBadgeUri = (_index) => {
-    //     let url;
-    //     if(badgeData.freeMintCount[_index] === '0' && badgeData.revealed === true) { 
-    //         url = badgeData.specialUri;
-    //     } else if(badgeData.freeMintCount[_index] === '0') {
-    //         url = badgeData.usedBadgeUri;
-    //     } else {
-    //         url = badgeData.badgeUri;
-    //     } 
-    //     return url;
-    // }
+
     
     //CSS 
     const theme = useTheme();
-    console.log(badgeData)
+
     //COUNTDOWN LOGIC
     const [timeleft, settimeleft] = useState("");
     let countDownDate = new Date("May 09, 2022 00:00:00").getTime();
@@ -397,11 +357,12 @@ const Home = () => {
                                 </StyledParagraph>
                                 <br/>
                                 <Link to="/Collection">
-                                    <Button text="REDEEM NOW" W={"8vw"} H={"3vw"} bgColor={theme.colors.c9red}
-                                        margin={"0"} hoverColor={theme.colors.bodyText} size={"0.7rem"} font={"Libre Baskerville, serif"}
+                                    <Button text="REDEEM NOW" W={"8vw"} H={"3vw"} bgColor={collectionData.loading ? "grey" : theme.colors.c9red}
+                                        margin={"0"} hoverColor={collectionData.loading ? "" : theme.colors.bodyText} size={"0.7rem"} font={"Libre Baskerville, serif"}
                                         spacing={"0.2rem"}
+                                        disabled={collectionData.loading ? true : false}
                                         onClick={() => {window.scrollTo(0,0)}} 
-                                    
+
                                         //RESPONSIVE
                                         laptopW = {"10vw"}
                                         laptopH = {"3.5vw"}

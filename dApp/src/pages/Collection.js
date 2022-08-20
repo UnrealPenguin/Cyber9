@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { StyledContainer, StyledImage, StyledParagraph, StyledUl, StyledLi } from "../components/styles/Elements.style";
-import { useDispatch, useSelector  } from 'react-redux';
+import { useEffect, useState, useRef } from 'react';
+import { StyledContainer, StyledImage, StyledParagraph, StyledUl, StyledLi, StyledSelect } from "../components/styles/Elements.style";
+import { useDispatch, useSelector } from 'react-redux';
 import Button from "../components/Button";
 import { useTheme } from 'styled-components';
 
@@ -8,13 +8,19 @@ import { fetchBadgeData } from "../redux/badgeData/badgeDataActions";
 import { fetchCollectionData } from "../redux/cyber9Data/cyber9DataActions";
 import { fetchItemsData } from "../redux/itemsData/itemsDataActions";
 
+import { IoInformationCircleOutline } from "react-icons/io5";
+import { BiReset } from "react-icons/bi";
+
 const Collection = () => {
     const dispatch = useDispatch();
     const blockchain = useSelector((state) => state.blockchain);
     const collectionData = useSelector((state) => state.cyber9Data);
     const badgeData = useSelector((state) => state.badgeData);
     const itemsData = useSelector((state) => state.itemsData);
-    console.log(badgeData);
+    const infoRef = useRef(null); 
+
+    const [infoPosX, setInfoPosX] = useState(0);
+    const [infoWidth, setInfoWidth] = useState(0);
 
     //selection logic
     const [isSelected, updateSelection] = useState([]);
@@ -39,6 +45,9 @@ const Collection = () => {
     //sort
     const [sort, setSort] = useState('default');
 
+    //info box
+    const [mouseOver, setMouseOver] = useState(false);
+
     //enenmy
     const [hasCD, setHasCD] = useState(false);
     const [spawning, setSpawning] = useState(false);
@@ -61,12 +70,14 @@ const Collection = () => {
     const [statResetAmount, setStatResetAmount] = useState(1);
     const [buyingItem, setBuyingItem] = useState(false);
     const [usingItem, setUsingItem] = useState(false);
-    
+
+
     //If the user changes account
     useEffect(() => {
         dispatch(fetchBadgeData(blockchain.account));
         dispatch(fetchCollectionData(blockchain.account));
         dispatch(fetchItemsData(blockchain.account));
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [blockchain.account]);
 
@@ -110,6 +121,13 @@ const Collection = () => {
             updateSelection((prevValue) => [...prevValue, {id: _ownedTokens[index], selected:false }])
         ));
     }
+
+    useEffect(() => {
+        if (infoRef){
+            setInfoPosX(infoRef.current.offsetLeft);
+            setInfoWidth(infoRef.current.offsetWidth);
+        }
+    }, [mouseOver])
 
     const updateSelect = (_id, _descendentIDs) => { 
         //only enters once
@@ -163,6 +181,47 @@ const Collection = () => {
         }
         return false;
            
+    }
+
+    //FOR BADGE INTERACTION
+    const checkBadgeUri = (_index) => {
+        let url;
+        // if(badgeData.freeMintCount[_index] === '0' && badgeData.revealed === true) { 
+        //     url = badgeData.specialUri;
+        // } else 
+        if(badgeData.freeMintCount[_index] === '0') {
+            url = badgeData.usedBadgeUri;
+        } else {
+            url = badgeData.badgeUri;
+        } 
+        return url;
+    }
+
+    const claimCollectionFree = (badgeId) => {
+        //get gas estimations
+        blockchain.web3.eth.getGasPrice().then((res) =>{
+            setGasPrice(res);
+        });
+        collectionData.smartContract.methods.freeMint(badgeId).estimateGas().then((res) =>{
+            setGasLimit(res);
+        });
+        collectionData.smartContract.methods
+        .freeMint(badgeId)
+        .send({
+            gasPrice: gasPrice,
+            gasLimit: gasLimit,
+            to: collectionData.smartContract.address,
+            from: blockchain.account,
+        })
+        .once('error', (err) => {
+            console.log(err);
+        })
+        .then((receipt) => {
+            console.log(receipt);
+            dispatch(fetchBadgeData(blockchain.account));
+            dispatch(fetchCollectionData(blockchain.account));
+        });
+      
     }
 
     //CONTRACT INTERACTION FUNCTIONS
@@ -756,10 +815,11 @@ const Collection = () => {
 
     return (
         <StyledContainer margin={"8% auto 0 auto"} W={theme.width.Nav}>
+            {(collectionData.loading === true) ? <p>loading...</p> : ""}
             {/* If user owns more than one badge */}
             {badgeData.ownerTokens.length > 0 ? (
-                <StyledContainer bgColor={theme.colors.containerColor} borderRadius={"3em"} padding={"2em"} 
-                    maxW={"1300px"} margin={"0 auto"}
+                <StyledContainer bgColor={theme.colors.containerColor} padding={"2em"} 
+                    maxW={"1300px"} margin={"0 auto 5% auto"}
                 >
                     <StyledParagraph>BADGE COLLECTION</StyledParagraph>
                     <StyledUl display={"flex"} flexWrap={"wrap"} justify={"space-around"}>
@@ -767,15 +827,15 @@ const Collection = () => {
                             <StyledContainer W={"30em"} H={"40em"}>
                                 <StyledLi key={data}>
                                     <StyledParagraph>Badge #{data}</StyledParagraph>
-                                    <StyledImage src={badgeData.freeMintCount[i] > 0 ? badgeData.badgeUri : badgeData.usedBadgeUri} alt={`Badge #${data}`} style={{width: "23em",height: "23em"}}/>
+                                    <StyledImage src={checkBadgeUri(i)} alt={`Badge #${data}`} style={{width: "23em",height: "23em"}}/>
                                     {badgeData.freeMintCount[i] > 0 ? (
-                                        <StyledParagraph>
+                                        <StyledParagraph font={"Jaldi, sans-serif"}>
                                             One of the 2000 mythical badges from the dragon king. Possessing one allows its owner to mint a descendent from the Cyber9 collection for free. It is said the dragon king infused his power into each badge. Acquire one before they vanish from this realm forever...
-                                            <Button text="USE FREE MINT" margin={"0"}/>
+                                            <Button text="USE FREE MINT" margin={"0"} onClick={() => {claimCollectionFree(i)}}/>
                                         </StyledParagraph>
                                         
                                     ) : (
-                                        <StyledParagraph>
+                                        <StyledParagraph font={"Jaldi, sans-serif"}>
                                             A broken badge from the dragon king, it has already been used to mint a descendent from the Cyber9 collection. Although it is shattered, a faint power is still emanating from the remnants. Perhaps this fragmented badge might still hold some value.    
                                         </StyledParagraph>
                                     )}
@@ -787,99 +847,148 @@ const Collection = () => {
             ):(
                 <></>
             )}
-            <Button text='Hunt DengLong' onClick={() => {
-                scoutEnemy();
-            }} disabled={spawning || collectionData.isSpawned || collectionData.loading || collectionData.usable === false} />
-            <p>You currently have {collectionData.tokenBalance} $BEI</p>
-            <p>You currently have {collectionData.storedBalance} $BEI stored</p>
 
-            {/* <StyledContainer>
-                <p>INVENTORY</p>
-                <p>You currently have {itemsData.orbBalance} Orbs</p>
-                <p>You currently have {itemsData.hpBalance} Hp kit(s)</p>
-                <p>You currently have {itemsData.cdBalance} Cooldown kit(s)</p>
-                <p>You currently have {itemsData.statResetBalance} stat reset kit(s)</p>
-            
+            <StyledContainer display={"flex"} alignItems={"center"} maxW={"1250px"} margin={"0 auto"}>
+                <StyledParagraph size={"1.8em"}>
+                    CYBER9 COLLECTION
+                </StyledParagraph>
+                <StyledContainer mLeft ={"auto"} onMouseLeave={() => {setMouseOver(false)}} > 
+                    <StyledContainer margin={"10% 0 0 0"} ref={infoRef}>
+                        <IoInformationCircleOutline style={{width: '100%', fontSize: '2.5em'}} onMouseOver={() => {setMouseOver(true)}} />
+                    </StyledContainer>
+                    {mouseOver ? (
+                        <StyledContainer bgColor={"#666666"} position={"absolute"} index={"2"} 
+                            W={"30em"} left={`calc(${infoPosX}px + ${infoWidth/2}px - 15.62em)`} arrow={true}
+                        >
+                            <StyledContainer margin={"2em 3em"}>
+                                <StyledParagraph size={"1.2em"} align={"left"}>Currency</StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
+                                    You currently have {collectionData.tokenBalance} $BEI<br/>
+                                    You currently have {collectionData.storedBalance} $BEI stored
+                                </StyledParagraph>
+                                <Button text="WITHDRAW YIELD" onClick={() => { withdrawYield() }} size={"1.1em"}
+                                    disabled={(canWithdraw && withdrawingYield===false? false : true) || collectionData.loading}
+                                    font={"Jaldi, sans-serif"} color={(canWithdraw && withdrawingYield===false? false : true) || collectionData.loading ? "grey" : theme.colors.activeBtnBG}
+                                />
+                                <br/>
+                                <StyledParagraph size={"1.2em"} align={"left"}>Inventory</StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"}>
+                                    You currently have {itemsData.orbBalance} Orbs<br/>
+                                    You currently have {itemsData.hpBalance} Hp kit(s)<br/>
+                                    You currently have {itemsData.cdBalance} Cooldown kit(s)<br/>
+                                    You currently have {itemsData.statResetBalance} stat reset kit(s)<br/>
+                                </StyledParagraph>
+                                <br />
+                                <StyledParagraph size={"1.2em"} align={"left"}>Bonuses</StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c1Bonus > 0 ? "" : "line-through"}>
+                                    Grants all descendents {c1Bonus > 0 ? c1Bonus : 5} bonus damage
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c2Bonus > 0 ? "" : "line-through"}>
+                                    Grants all descendents {c2Bonus > 0 ? c2Bonus : 10} bonus agility
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c3Bonus > 0 ? "" : "line-through"}>
+                                    Grants all descendents {c3Bonus > 0 ? c3Bonus : 5} bonus dexterity
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c4Bonus > 0 ? "" : "line-through"}>
+                                    Grants all descendents {c4Bonus > 0 ? c4Bonus : 5} bonus luck
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c5Bonus > 0 ? "" : "line-through"}>
+                                    Grants all descendents {c5Bonus > 0 ? c5Bonus : 5} bonus intelligence
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c6Bonus > 0 ? "" : "line-through"}>
+                                    Reduces all descendents received damage by {c6Bonus > 0 ? c6Bonus: 5}
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c7Bonus > 0 ? "" : "line-through"}>
+                                    When spawning, reduces enemy's HP by {c7Bonus > 0 ? c7Bonus : 15}
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c8Bonus > 0 ? "" : "line-through"}>
+                                    Grants {c8Bonus > 0 ? c8Bonus : 10} bonus BEI to staked descendents (Must restake to take effect)
+                                </StyledParagraph>
+                                <StyledParagraph align={"left"} font={"Jaldi, sans-serif"} decor={c9Bonus > 0 ? "" : "line-through"}>
+                                    Grants {c9Bonus > 0 ? c9Bonus : 100} bonus experience when attacking an enemy
+                                </StyledParagraph>
+                            </StyledContainer>
+                        </StyledContainer>
+                        ) : (
+                        <></>
+                    )}
+                </StyledContainer>
             </StyledContainer>
-
-            {collectionData.pastEvents && collectionData.pastEvents.slice(-5).map((data, i) => (
-                <p key={data.Event + i} style={{whiteSpace: "pre-line", verticalAlign: "bottom"}}>
-                    {checkEvents(data, i)}
-                </p>
-            ))}
-
-            {<StyledContainer>
-                <p style={c1Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants all descendents {c1Bonus > 0 ? c1Bonus : 5} bonus damage</p>
-                <p style={c2Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants all descendents {c2Bonus > 0 ? c2Bonus : 10} bonus agility</p>
-                <p style={c3Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants all descendents {c3Bonus > 0 ? c3Bonus : 5} bonus dexterity</p>
-                <p style={c4Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants all descendents {c4Bonus > 0 ? c4Bonus : 5} bonus luck</p>
-                <p style={c5Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants all descendents {c5Bonus > 0 ? c5Bonus : 5} bonus intelligence</p>
-                <p style={c6Bonus > 0 ? {color:"black"} :{color:"white"}}>Reduces all descendents received damage by {c6Bonus > 0 ? c6Bonus: 5}</p>
-                <p style={c7Bonus > 0 ? {color:"black"} :{color:"white"}}>When spawning, reduces enemy's HP by {c7Bonus > 0 ? c7Bonus : 15}</p>
-                <p style={c8Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants {c8Bonus > 0 ? c8Bonus : 10} bonus BEI to staked descendents (Must restake to take effect)</p>
-                <p style={c9Bonus > 0 ? {color:"black"} :{color:"white"}}>Grants {c9Bonus > 0 ? c9Bonus : 100} bonus experience when attacking an enemy</p>
-            </StyledContainer>}
-            {(collectionData.isSpawned) ? 
-                <StyledContainer>
-                    <p>Enemy Hp: {collectionData.enemyStats.hp} </p>
-                    <p>Enemy Attack: {parseInt(collectionData.enemyStats.atk)} ~ {parseInt(collectionData.enemyStats.atk)*2}</p>             
-                </StyledContainer> : ""}  */}
-
-            <StyledContainer>
-                {stakedSelection === false && 
+            <StyledContainer display={"flex"} maxW={"1250px"} bgColor={"red"} margin={"0 auto"}>
+                <StyledContainer alignItems={"left"} margin={"auto 0"}> 
+                    <StyledSelect bgColor={"red"} onChange={(e) => setSort(e.target.value)}>
+                        <option value="default">Default</option>
+                        <option value="available">Available</option>
+                        <option value="staked">Staked</option>
+                        <option value="ascending">Ascending</option>
+                        <option value="descending">Descending</option>
+                    </StyledSelect>
+                </StyledContainer>
+                <BiReset style={{fontSize: '2em', margin:"auto auto auto 1%", cursor: 'pointer'}} 
+                    onClick={() => {deselect(collectionData.ownerTokens);}}/>
+                <StyledContainer mLeft={"auto"} margin={"auto 0 auto auto"} display={"flex"}>
+                    <Button text='Hunt DengLong' onClick={() => { scoutEnemy() }} 
+                        disabled={spawning || collectionData.isSpawned || collectionData.loading || collectionData.usable === false}
+                        color={(spawning || collectionData.isSpawned || collectionData.loading || collectionData.usable === false) ? "grey" : "white"}
+                     />
+                {/* {stakedSelection === false &&  */}
                     <Button text="Stake" onClick={() => {
                         stake(selectionArray);
                     }} disabled={(canUse && usingNFT===false ? false : true) || collectionData.loading|| hasCD || collectionData.usable === false}/>
-                }
-                 {stakedSelection === false && 
+                {/* } */}
+                 {/* {stakedSelection === false &&  */}
                     <Button text="Attack" onClick={() => {
                         attackEnemy(selectionArray);
                     }} disabled={(canUse && usingNFT===false ? false : true) || collectionData.loading || collectionData.isSpawned===false || hasCD}/>
-                }
-                {stakedSelection === true && 
+                {/* } */}
+                {/* {stakedSelection === true &&  */}
                     <Button text="Unstake" onClick={() => {
                         unstake(selectionArray);
                     }} disabled={(canUse && usingNFT===false ? false : true) || collectionData.loading}/>
-                } 
-                <Button text="Reset" onClick={() => {
-                    deselect(collectionData.ownerTokens);
-                }}/>
+                {/* }         */}
+                </StyledContainer>
+            </StyledContainer>
 
-                <Button text="Withdraw Yield" onClick={() => {
-                    withdrawYield();
-                }} disabled={(canWithdraw && withdrawingYield===false? false : true) || collectionData.loading}/>
-                
-                <select onChange={(e) => setSort(e.target.value)}>
-                    <option value="default">Default</option>
-                    <option value="available">Available</option>
-                    <option value="staked">Staked</option>
-                    <option value="ascending">Ascending</option>
-                    <option value="descending">Descending</option>
-                </select>
-            </StyledContainer>
-                {(collectionData.loading === true) ? <p>loading...</p> : ""}
             <StyledContainer>
-                <StyledParagraph>
-                    CYBER9 COLLECTION
-                </StyledParagraph>
+                <StyledContainer>
+                    <StyledParagraph>
+                        LOG
+                    </StyledParagraph>
+                    {collectionData.pastEvents && collectionData.pastEvents.slice(-5).map((data, i) => (
+                        <StyledParagraph key={data.Event + i} style={{whiteSpace: "pre-line", verticalAlign: "bottom"}}>
+                            {checkEvents(data, i)}
+                        </StyledParagraph>
+                    ))}
+                </StyledContainer>
+                <StyledContainer>
+                    {(collectionData.isSpawned) ? 
+                        <StyledParagraph>
+                            Enemy Hp: {collectionData.enemyStats.hp} <br/>
+                            Enemy Attack: {parseInt(collectionData.enemyStats.atk)} ~ {parseInt(collectionData.enemyStats.atk)*2}
+                        </StyledParagraph> 
+                        : <></>
+                    } 
+                </StyledContainer>
+               
             </StyledContainer>
-            <StyledContainer W={theme.width.Nav} maxW={"1400px"} margin={"0 auto"}>
+
+            <StyledContainer maxW={"1400px"} margin={"0 auto"}>
                 <StyledUl display={"flex"} flexWrap={"wrap"} justify={"space-around"}>             
                     {collectionData.ownerTokens.map((data, i) => (
                         <StyledContainer onClick={() => {
                             updateSelect(i, data);
                             }} style={checkStatus(i) === 'Reviving' || checkStatus(i) === 'On Cooldown' ? {pointerEvents: "none"} : {pointerEvents: "auto"}}
                             margin={"3em 1em"} padding={"3em 3em"} bgColor={isSelected[i] && isSelected[i].selected ? theme.colors.selected : theme.colors.containerColor }
-                            borderRadius={"1em"} border={isSelected[i] && isSelected[i].selected  ? "" : "1px #595959 solid"} 
-                            highlight={isSelected[i] && isSelected[i].selected ? `0 0 2em ${theme.colors.c9red}` : "0 0 2em #a6a6a6"}
+                            border={isSelected[i] && isSelected[i].selected  ? "" : "1px #595959 solid"} cursor={"pointer"}
+                            highlight={isSelected[i] && isSelected[i].selected ? `0 0 2em #70292d` : "0 0 1.5em #a6a6a6"}
                         >
 
                             <StyledLi key={data}>
                                 <StyledParagraph align={"left"}>Descendent #{data}</StyledParagraph>
                                 <StyledImage src={collectionData.imgArray[i]} alt={`Descendent #${data}`} style={{width: "23em",height: "23em"}} 
-                                    border={"2px #303030 solid"} borderRadius={"0.5em"}
+                                    border={"2px #303030 solid"}
                                 />
-                                <StyledParagraph align={"left"} lineHeight={"2em"}>Status: {checkStatus(i)}<br/>
+                                <StyledParagraph align={"left"} lineHeight={"2em"} font={"Jaldi, sans-serif"}>Status: {checkStatus(i)}<br/>
                                 {collectionData.totalYield[i].balance !== '0' ? `Current $BEI Yield: ${collectionData.totalYield[i].balance} \n` : "" }
                                 {collectionData.totalYield[i].experience !== '0' ? `Current EXP Yield: ${collectionData.totalYield[i].experience} \n` : "" }
                                 {collectionData.storedExp[i] !== '0' ? `Stored EXP : ${collectionData.storedExp[i]} \n` : ""}
@@ -915,6 +1024,7 @@ const Collection = () => {
                     ))}
                 </StyledUl>
             </StyledContainer>
+ 
             <StyledContainer>
                 <p>Store</p>
                 <p>Orb</p>

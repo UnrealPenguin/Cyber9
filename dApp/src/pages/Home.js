@@ -39,19 +39,6 @@ const Home = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [blockchain.account]);
 
-    //BADGE
-    const addBadgeAmount = () => {
-        let newMintAmount = badgeMintAmount + 1;
-        if(newMintAmount > 5) newMintAmount = 5;
-        setBadgeMintAmount(newMintAmount);
-    }
-
-    const subBadgeAmount = () => {
-        let newMintAmount = badgeMintAmount - 1;
-        if(newMintAmount < 1) newMintAmount = 1;
-        setBadgeMintAmount(newMintAmount);
-    }
-
     // mint artifact
     const claimBadge = (_amount) => {
         if (_amount <= 0) {
@@ -509,82 +496,3 @@ const Home = () => {
 }
 
 export default Home;
-
-
-/* {blockchain.connected ? (
-                <StyledContainer 
-                    W={theme.width.MainContent}
-                    margin={"0 auto"}
-                >
-                    <StyledContainer> 
-                        <p>Artifact Supply {badgeData.totalSupply}/2000</p>
-                        <p>Cost {badgeData.cost/10**18} MATIC</p>
-
-                        <Button text="-" onClick={() => {
-                            subBadgeAmount();
-                        }}/>
-                        {badgeMintAmount}
-                        <Button text="+" onClick={() => {
-                            addBadgeAmount();
-                        }}/>
-                        <br />
-
-                        <Button text="mint" disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading} onClick={() => {
-                            claimBadge(badgeMintAmount);
-                        }} />
-                    </StyledContainer>
-
-                    
-                </StyledContainer>
-            ) : (
-                <StyledContainer 
-                    W={theme.width.MainContent}
-                    margin={"0 auto"}
-                >
-                        <p>Artifact Supply {badgeData.totalSupply}/2000</p>
-                        <p>Cost {badgeData.cost/10**18} MATIC</p>
-
-                        <Button text="-" onClick={() => {
-                            subBadgeAmount();
-                        }}/>
-                        {badgeMintAmount}
-                        <Button text="+" onClick={() => {
-                            addBadgeAmount();
-                        }}/>
-                        <br />
-
-                        <Button text="mint" disabled={canMint(blockchain.connected) || claimingBadge || badgeData.loading} onClick={() => {
-                            claimBadge(badgeMintAmount);
-                        }} />
-                    </StyledContainer>
-            )} 
-            
-            ------------------------------- FOR COLLECTION  -----------------------------
-            {blockchain.connected ? (
-                <StyledContainer>
-                    <br/>
-                    <StyledContainer>
-                        <Button text="-" onClick={() => {
-                            subMintAmount();
-                        }}/>
-                        {mintAmount}
-                        <Button text="+" onClick={() => {
-                            addMintAmount();
-                        }}/>
-                    </StyledContainer>
-                    
-                    <br/>
-
-                    <Button text="Mint Collection" disabled={canMint(blockchain.connected) || claimingCollection || collectionData.loading} onClick={() => {
-                        claimCollection(mintAmount);
-                    }}/>
-                    <p>{collectionData.loading ? 'loading...' : "" }</p>
-                    <p>Cost: {(collectionData.cost*mintAmount)/10**18} MATIC</p>
-                    <p>Collection supply: {collectionData.currentSupply}/{collectionData.totalSupply}</p>
-
-                </StyledContainer>
-            ) : (
-                <StyledContainer>
-                    <p>{blockchain.errorMsg}</p>
-                </StyledContainer>
-            )} */

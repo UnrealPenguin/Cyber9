@@ -94,7 +94,7 @@
             {
                 "indexed": false,
                 "internalType": "bool",
-                "name": "isCrit",
+                "name": "_isCrit",
                 "type": "bool"
             },
             {
@@ -463,6 +463,11 @@
                 "internalType": "uint256",
                 "name": "_dex",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_randomResult",
+                "type": "uint256"
             }
         ],
         "name": "crit",
@@ -590,25 +595,6 @@
                 "internalType": "uint256",
                 "name": "balance",
                 "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_tokenId",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCharacterMaxHp",
-        "outputs": [
-            {
-                "internalType": "int256",
-                "name": "",
-                "type": "int256"
             }
         ],
         "stateMutability": "view",
@@ -1077,6 +1063,11 @@
             {
                 "internalType": "uint256",
                 "name": "_type",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_randomResult",
                 "type": "uint256"
             }
         ],

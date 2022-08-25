@@ -18,6 +18,7 @@ export const StyledButton = styled.button`
     justify-content: center;
     align-items: center;
     letter-spacing: ${({ spacing }) => spacing ? spacing : ""}; 
+    pointer-events: ${({ pEvent }) => pEvent ? pEvent : ""};
 
     &:hover{
         color: ${({ hoverColor }) => hoverColor ? hoverColor : ""};

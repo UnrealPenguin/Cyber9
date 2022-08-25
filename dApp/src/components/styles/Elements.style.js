@@ -118,7 +118,7 @@ export const StyledParagraph = styled.p`
     transform: ${({ transform }) => transform ? transform : ""};
     user-select: ${({ select }) => select ? select : ""};
     line-height: ${({ lineHeight }) => lineHeight ? lineHeight : ""};
-    
+    opacity: ${({ opacity }) => opacity ? opacity : ""};
     text-decoration: ${({ decor }) => decor ? decor : ""};
     overflow: hidden;
     word-break: break-word;
@@ -165,8 +165,14 @@ export const StyledSelect = styled.select`
     width: ${({ W }) => W ? W : ""};
     height: ${({ H }) => H ? H : ""};
     background-color: ${({ bgColor }) => bgColor ? bgColor : ""};
+    color: ${({ color }) => color ? color : ""};
     margin: ${({ margin }) => margin ? margin : ""};
     text-align: ${({ align }) => align ? align : "center"};
+    appearance: none;
+    font-size: 1.3em;
+    font-family: Jaldi, sans-serif;
+    border: none;
+    cursor: pointer;
 `
 
 export const StyledUl = styled.ul`

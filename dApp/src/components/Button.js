@@ -3,7 +3,7 @@ import { StyledButton } from './styles/Button.style';
 
 const Button = ({ color, text, onClick , disabled, cursor, hoverColor, font, W, H,
         bgColor, size, bgDisabled, colorDisabled, tabletW, tabletH, laptopW, laptopH, margin,
-        tabletFont, laptopFont, spacing
+        tabletFont, laptopFont, spacing, pEvent
     }) => {
 
     return (
@@ -12,7 +12,7 @@ const Button = ({ color, text, onClick , disabled, cursor, hoverColor, font, W, 
             bgColor={bgColor} size={size} bgDisabled={bgDisabled}
             colorDisabled={colorDisabled} tabletW={tabletW} tabletH={tabletH}
             laptopW={laptopW} laptopH={laptopH} margin={margin} tabletFont={tabletFont}
-            laptopFont={laptopFont} spacing={spacing}
+            laptopFont={laptopFont} spacing={spacing} pEvent={pEvent}
         >
             {text}
         </StyledButton>

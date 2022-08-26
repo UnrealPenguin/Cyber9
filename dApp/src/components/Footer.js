@@ -74,7 +74,7 @@ const Footer = () => {
                     justify={"center"} margin={"2.5vh 0 0 0"} spacing={"0.3rem"}
                     size={"0.7rem"} font={"Jaldi, sans-serif"}
                 >
-                    <a href="https://polygonscan.com/address/0xa0bed2e79eec0dd9aa3238d64541e59f134be003">
+                    <a href="https://polygonscan.com/address/0xa0bed2e79eec0dd9aa3238d64541e59f134be003" target={"_blank"}>
                         BADGE CONTRACT
                     </a>
                 </StyledParagraph>

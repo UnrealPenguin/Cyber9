@@ -66,7 +66,7 @@ const Navbar = () => {
             top={"0"}
             left={"0"}
 
-            index={"1"}
+            index={"20"}
             bgColor={theme.colors.bodyBackground}
         >           
             <StyledContainer 
@@ -85,7 +85,7 @@ const Navbar = () => {
             >
                 <StyledContainer>
                     <Link to="/" >
-                            <StyledImage 
+                            <StyledImage onClick={() => {window.scrollTo(0,0)}} 
                                 src={logo} alt="Cyber9"
                                 W={"3.5vw"}
                                 H={"auto"}
@@ -98,10 +98,11 @@ const Navbar = () => {
                     display={"flex"}
                     mLeft={"auto"}
                 >
-                    <StyledLi margin={"0 1vw 0 0"}>
+                    <StyledLi margin={"0 1vw 0 0"} >
                         <Link to="/">
                             <Button text="HOME" hoverColor={theme.colors.c9red} font={"Jaldi, sans-serif"}
                                 color={location.pathname === "/" ? theme.colors.activeLink : ""}  
+                                onClick={() => {window.scrollTo(0,0)}} 
                             />
                         </Link>
                     </StyledLi>

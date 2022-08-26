@@ -37,13 +37,15 @@ export const StyledContainer = styled.div`
     align-content: ${({ alignContent }) => alignContent ? alignContent : ""}; 
 
     z-index: ${({ index }) => index ? index : ""};
+    border: ${({ border }) => border ? border : ""};
     border-bottom: ${({ borderBot }) => borderBot ? borderBot : ""};
     border-top: ${({ borderTop }) => borderTop ? borderTop : ""};
     border-radius: ${({ borderRadius }) => borderRadius ? borderRadius : ""};
     text-align: center;
     opacity: ${({ opacity }) => opacity ? opacity : ""};
-    border: ${({ border }) => border ? border : ""};
     cursor: ${({ cursor }) => cursor ? cursor : ""};
+
+    animation: ${({ anim }) => anim ? anim : ""};
     
     &:hover{
         box-shadow: ${({ highlight }) => highlight ? highlight : ""};

@@ -812,9 +812,25 @@ const Collection = () => {
     //theme 
     const theme = useTheme();
 
+    //For loading
+    const loader = () => {
+        if (collectionData.loading === true) {
+            return (
+                <>
+                    <StyledContainer W={"100%"} H={"100%"} index={"9"} 
+                        bgColor={"black"} position={"fixed"} top={"0"} left={"0"} opacity={"60%"}
+                    />
+                    <StyledContainer W={"3.5em"} H={"3.5em"} display={"flex"} position={"fixed"} top={"50%"} left={"50%"} border={`5px solid #4C4C4C`} borderTop={"5px solid #7C7C7C"}
+                    borderRadius={"50%"} opacity={"100%"} index={"10"} anim={"rotate 1.2s linear infinite"}/>                    
+                </>
+            )   
+        }
+    }
+
     return (
         <StyledContainer margin={"8% auto 0 auto"} W={theme.width.Nav}>
-            {(collectionData.loading === true) ? <p>loading...</p> : ""}
+            {/* {(collectionData.loading === true) ? <p>loading...</p> : ""} */}
+            {loader()}
             {/* If user owns more than one badge */}
             {badgeData.ownerTokens.length> 0 ? (
                 <StyledContainer bgColor={theme.colors.containerColor} padding={"2em"} 

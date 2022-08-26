@@ -60,6 +60,27 @@ const GlobalStyles = createGlobalStyle`
     p {
         min-height: 1rem;
     }
+
+    //for loading animation
+    @keyframes preloader {
+        100% { transform: scale(1.5); }
+    }
+
+    @-webkit-keyframes rotate {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(360deg);}
+    }
+
+    @-moz-keyframes rotate {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(360deg);}
+    }
+
+    @keyframes rotate {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+    }
+
 `
 export default GlobalStyles;
 

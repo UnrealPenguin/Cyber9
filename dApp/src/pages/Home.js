@@ -124,9 +124,7 @@ const Home = () => {
     const canMint = (isConnected) => {
         if(isConnected) { return false } else { return true };
     }
-    
-
-    
+       
     //CSS 
     const theme = useTheme();
 
@@ -156,8 +154,27 @@ const Home = () => {
 
         }, 1000);
     }, [timeleft, countDownDate]);
-
     //END COUNTDOWN
+
+    //LOADING ANIM
+    const loader = () => {
+        if (collectionData.loading && blockchain.connected) {
+            return (
+                <StyledContainer display={"flex"} justify={"center"} alignItems={"center"} margin={"0 0 3.5% 0"}>
+                    <StyledParagraph size={"1.3em"} font={"Jaldi, sans-serif"}> Loading Smart Contract</StyledParagraph>
+                    <StyledContainer borderRadius={"100%"} bgColor={theme.colors.bodyText} border={`3px solid ${theme.colors.bodyText}`} margin={"0.6em"} anim={"preloader .6s ease-in-out alternate infinite;"}/>
+                    <StyledContainer borderRadius={"100%"} bgColor={theme.colors.bodyText} border={`3px solid ${theme.colors.bodyText}`} margin={"0.6em"} anim={"preloader .6s ease-in-out alternate .2s infinite;"}/>
+                    <StyledContainer borderRadius={"100%"} bgColor={theme.colors.bodyText} border={`3px solid ${theme.colors.bodyText}`} margin={"0.6em"} anim={"preloader .6s ease-in-out alternate .4s infinite;"}/>
+                </StyledContainer>
+            )
+        }else{
+            return (
+                <StyledParagraph margin={"0 0 3.5% 0"} size={"1.35em"}>
+                    {collectionData.currentSupply}/{collectionData.totalSupply}
+                </StyledParagraph>
+            )
+        }
+    }
 
     return (
         <StyledContainer>
@@ -194,9 +211,8 @@ const Home = () => {
                         mobileLW={"100vw"}
                     />
                     {/* TOTAL SUPPLY */}
-                    <StyledParagraph margin={"0 0 3.5% 0"} size="1.3rem">
-                        {(collectionData.loading && blockchain.connected) ? 'Loading smart contract...' : blockchain.connected ? `${collectionData.currentSupply}/${collectionData.totalSupply}` : ""}
-                    </StyledParagraph>
+                    {loader()}
+
                     <StyledContainer W={"20vw"} margin={"auto"} 
                         display={"flex"}  
 

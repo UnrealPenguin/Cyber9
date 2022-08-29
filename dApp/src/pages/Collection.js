@@ -829,7 +829,6 @@ const Collection = () => {
 
     return (
         <StyledContainer margin={"8% auto 0 auto"} W={theme.width.Nav}>
-            {/* {(collectionData.loading === true) ? <p>loading...</p> : ""} */}
             {loader()}
             {/* If user owns more than one badge */}
             {badgeData.ownerTokens.length> 0 ? (
@@ -873,7 +872,7 @@ const Collection = () => {
                     <StyledContainer margin={"10% 0 0 0"} ref={infoRef}>
                         <IoInformationCircleOutline style={{width: '100%', fontSize: '2.5em'}} onMouseOver={() => {setMouseOver(true)}} />
                     </StyledContainer>
-                    {!mouseOver ? (
+                    {mouseOver ? (
                         <StyledContainer bgColor={"#666666"} position={"absolute"} index={"2"} 
                             W={"30em"} left={`calc(${infoPosX}px + ${infoWidth/2}px - 15.62em)`} arrow={true}
 

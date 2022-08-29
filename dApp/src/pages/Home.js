@@ -14,7 +14,7 @@ import BG from "../components/images/BG.jpg";
 import BG2 from "../components/images/BG2.jpg";
 import dragonImg from "../components/images/dragon_logo.png";
 import exchangeBadge from "../components/images/exchangeBadge.jpg";
-import roadmap from "../components/images/roadmap.jpg";
+// import roadmap from "../components/images/roadmap.jpg";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -26,7 +26,8 @@ const Home = () => {
     const [claimingCollection, setClaimingCollection] = useState(false);
 
     //BADGE 
-    const [badgeMintAmount, setBadgeMintAmount] = useState(1);
+    // const [badgeMintAmount, setBadgeMintAmount] = useState(1);
+    const badgeMintAmount = 1;
 
     const [mintAmount, setMintAmount] = useState(1);
     const [gasPrice, setGasPrice] = useState(null);

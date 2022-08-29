@@ -94,6 +94,7 @@ export const StyledContainer = styled.div`
         right: ${({ rightMobileL }) => rightMobileL ? rightMobileL : ""};
 
         transform: ${({ transformMobileL }) => transformMobileL ? transformMobileL : ""};
+        left: ${({ mobileLeft }) => mobileLeft ? mobileLeft : ""};
     }
 `
 
@@ -159,6 +160,7 @@ export const StyledImage = styled.img`
         height: ${({ mobileLH }) => mobileLH ? mobileLH : ""};
         padding: ${({ mobileLPad }) => mobileLPad ? mobileLPad : ""};
         margin: ${({ mobileLMargin }) => mobileLMargin ? mobileLMargin : ""}; 
+        font-size: ${({ mobileFont }) => mobileFont ? mobileFont : ""}
     }
 
 `
@@ -192,4 +194,8 @@ export const StyledUl = styled.ul`
 export const StyledLi = styled.li`
     margin: ${({ margin }) => margin ? margin : ""};
     padding: ${({ padding }) => padding ? padding : ""};
+
+    @media ${device.laptop} {
+        margin: ${({ marginLaptop }) => marginLaptop ? marginLaptop : ""};
+    }
 `

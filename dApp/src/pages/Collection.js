@@ -873,9 +873,13 @@ const Collection = () => {
                     <StyledContainer margin={"10% 0 0 0"} ref={infoRef}>
                         <IoInformationCircleOutline style={{width: '100%', fontSize: '2.5em'}} onMouseOver={() => {setMouseOver(true)}} />
                     </StyledContainer>
-                    {mouseOver ? (
+                    {!mouseOver ? (
                         <StyledContainer bgColor={"#666666"} position={"absolute"} index={"2"} 
                             W={"30em"} left={`calc(${infoPosX}px + ${infoWidth/2}px - 15.62em)`} arrow={true}
+
+                            //RESPONSIVE
+                            mobileLW={"20em"}
+                            mobileLeft={`calc(${infoPosX}px + ${infoWidth/2}px - 11.30em)`}
                         >
                             <StyledContainer margin={"2em 3em"}>
                                 <StyledParagraph size={"1.2em"} align={"left"}>Currency</StyledParagraph>

@@ -87,7 +87,7 @@ const Navbar = () => {
                     <Link to="/" >
                             <StyledImage onClick={() => {window.scrollTo(0,0)}} 
                                 src={logo} alt="Cyber9"
-                                W={"3.5vw"}
+                                W={"3vw"}
                                 H={"auto"}
                                 minW={"25px"}
                             />
@@ -98,7 +98,7 @@ const Navbar = () => {
                     display={"flex"}
                     mLeft={"auto"}
                 >
-                    <StyledLi margin={"0 1vw 0 0"} >
+                    <StyledLi>
                         <Link to="/">
                             <Button text="HOME" hoverColor={theme.colors.c9red} font={"Jaldi, sans-serif"}
                                 color={location.pathname === "/" ? theme.colors.activeLink : ""}  
@@ -107,7 +107,10 @@ const Navbar = () => {
                         </Link>
                     </StyledLi>
                     {/* FOR COLLECTION */}
-                    <StyledLi margin={"0 1vw 0 0"}>
+                    <StyledLi margin={"0 1vw"}
+                        //RESPONSIVE
+                        marginLaptop={"0 1.5vw"}
+                    >
                         <Link to="/Collection">
                             {location.pathname === "/Collection" ? (
                                 <Button text="COLLECTION" font={"Jaldi, sans-serif"} 

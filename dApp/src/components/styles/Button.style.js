@@ -39,4 +39,8 @@ export const StyledButton = styled.button`
         height: ${({ tabletH }) => tabletH ? tabletH : ""};
         font-size: ${({ tabletFont }) => tabletFont ? tabletFont : ""};
     }
+    
+    @media ${device.mobileL} {
+        font-size: ${({ mobileFont }) => mobileFont ? mobileFont : ""}
+    }
 `

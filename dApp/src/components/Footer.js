@@ -65,7 +65,7 @@ const Footer = () => {
                 <Link to="/">
                     <StyledImage 
                         src={logo} alt="Cyber9"
-                        W={"5vw"}
+                        W={"4vw"}
                         H={"auto"}
                     />
                 </Link>
@@ -76,6 +76,14 @@ const Footer = () => {
                 >
                     <a href="https://polygonscan.com/address/0xa0bed2e79eec0dd9aa3238d64541e59f134be003" target={"_blank"}>
                         BADGE CONTRACT
+                    </a>
+                </StyledParagraph>
+                <StyledParagraph display={"flex"} alignItems={"center"}
+                    justify={"center"} margin={"1vh 0 0 0"} spacing={"0.3rem"}
+                    size={"0.7rem"} font={"Jaldi, sans-serif"}
+                >
+                    <a href="#" target={"_blank"}>
+                        CYBER9 CONTRACT
                     </a>
                 </StyledParagraph>
 

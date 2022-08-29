@@ -251,6 +251,7 @@ const Home = () => {
                             //RESPONSIV
                             laptopW = {"12vw"}
                             laptopH = {"3.5vw"}
+                            laptopFont={"0.7rem"}
 
                             tabletW = {"15vw"}
                             tabletH = {"4vw"}
@@ -340,11 +341,11 @@ const Home = () => {
                                 //RESPONSIVE
                                 laptopW = {"10vw"}
                                 laptopH = {"3.5vw"}
-                                laptopFont = {"0.6rem"}
+                                laptopFont = {"0.5rem"}
 
                                 tabletW = {"13vw"}
                                 tabletH = {"3.5vw"}
-                                tabletFont = {"0.5rem"}
+                                tabletFont = {"0.35rem"}
                             />
                         </StyledContainer>
                         <br/><br/><br/>
@@ -369,11 +370,11 @@ const Home = () => {
                                         //RESPONSIVE
                                         laptopW = {"10vw"}
                                         laptopH = {"3.5vw"}
-                                        laptopFont = {"0.6rem"}
+                                        laptopFont = {"0.5rem"}
 
                                         tabletW = {"13vw"}
                                         tabletH = {"3.5vw"}
-                                        tabletFont = {"0.5rem"} 
+                                        tabletFont = {"0.35rem"} 
                                     >
 
                                     </Button>

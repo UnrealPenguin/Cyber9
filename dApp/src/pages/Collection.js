@@ -123,7 +123,7 @@ const Collection = () => {
     }
 
     useEffect(() => {
-        if (infoRef){
+        if (infoRef && collectionData.ownerTokens.length > 0){
             setInfoPosX(infoRef.current.offsetLeft);
             setInfoWidth(infoRef.current.offsetWidth);
         }
@@ -864,6 +864,9 @@ const Collection = () => {
                 <></>
             )}
 
+            {collectionData.ownerTokens.length === 0 ?
+            <></>
+            : <>
             <StyledContainer display={"flex"} alignItems={"center"} maxW={"1300px"} margin={"0 auto 1% auto"}>
                 <StyledParagraph size={"1.5em"}>
                     CYBER9 COLLECTION
@@ -1017,9 +1020,6 @@ const Collection = () => {
                 </StyledContainer>
                
             </StyledContainer>
-                     {/* box-shadow: inset 0 0 50px 1000px rgb(0 0 0 / 80%)
-                opacity 50% to all other elements when it is unavailable.
-            */}
 
             <StyledContainer maxW={"1400px"} margin={"0 auto"}>
                 <StyledUl display={"flex"} flexWrap={"wrap"} justify={"space-around"}>             
@@ -1184,9 +1184,8 @@ const Collection = () => {
                     </StyledContainer>
                 </StyledContainer>
             </StyledContainer>
-        </StyledContainer>
-    
-        
+            </>}
+        </StyledContainer>   
   
     )
 }

@@ -168,12 +168,14 @@ const Home = () => {
                     <StyledContainer borderRadius={"100%"} bgColor={theme.colors.bodyText} border={`3px solid ${theme.colors.bodyText}`} margin={"0.6em"} anim={"preloader .6s ease-in-out alternate .4s infinite;"}/>
                 </StyledContainer>
             )
-        }else{
+        }else if(!collectionData.loading && blockchain.connected){
             return (
                 <StyledParagraph margin={"0 0 3.5% 0"} size={"1.35em"}>
                     {collectionData.currentSupply}/{collectionData.totalSupply}
                 </StyledParagraph>
             )
+        }else{
+            return (<></>)
         }
     }
 

@@ -20,10 +20,12 @@ const Navbar = () => {
     const location = useLocation();
     const blockchain = useSelector((state) => state.blockchain);
     const collectionData = useSelector((state) => state.cyber9Data);
+    const badgeData = useSelector((state) => state.badgeData);
 
     const [restricted, setRestricted] = useState(false); 
     useEffect(() => {
-        collectionData.ownerTokens.length > 0 ? setRestricted(false) : setRestricted(true);
+        collectionData.ownerTokens.length > 0 || badgeData.ownerTokens.length > 0 ? setRestricted(false) : setRestricted(true);
+        
         if(!blockchain.connected || restricted) navigate("/");
         
     // eslint-disable-next-line react-hooks/exhaustive-deps    

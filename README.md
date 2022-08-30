@@ -20,5 +20,12 @@ Only Badge/Cyber9 owners will be able to access the Collection page.
   * Each Cyber9 NFTs stats are generated randomly using Chainlinks VRF Oracle. <br/>
   * Responsive design.
 
+## Built with 
+<code><img height="20" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" /></code>
+<code><img height="20" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" /></code>
+<code><img height="20" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" /></code>
+<code><img height="20" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg" /></code>
+<code><img height="20" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/solidity/solidity-original.svg" /></code>
+
 ## Acknowledgements
-Cyber9 NFTs were generated using a personalized version of the Hashlips Art Engine.
+Cyber9 NFTs were generated using a personalized version of the [Hashlips Art Engine](https://github.com/HashLips/hashlips_art_engine).

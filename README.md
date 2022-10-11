@@ -1,5 +1,8 @@
 # Cyber9
 
+![githubPreview](https://user-images.githubusercontent.com/22732115/195153637-3f1fdd83-29f5-4347-8b7f-0fea0156f976.png)
+
+
 ## Overview
 Cyber9 is an NFT collection that resides on the polygon network. It currently consists of 4 different smart contracts and 4 custom libraries. These smart contracts and 
 libraries were built using solidity and hardhat as the testing environment. All interaction with the smart contracts are available through the dApp, which is built with
